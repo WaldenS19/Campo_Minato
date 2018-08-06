@@ -1,4 +1,5 @@
 import math
+import random
 
 class Casella:
     def __init__(self, x, y):
@@ -27,9 +28,26 @@ def print_griglia(griglia):
     print('\n'.join([' '.join(['{}'.format(item) for item in row])
                      for row in griglia]))
 
-bombe = 3
+def caselle_rimanenti(griglia):
+    global numero_caselle
+    numero_caselle = 0
+    for numeri in griglia:
+        for numero in numeri:
+            if numero == "?":
+                numero_caselle += 1
+    return(numero_caselle)
+
+def check_bomba(x,y):
+    global posizione_bombe
+    return (x,y) in posizione_bombe
 
 w, h = 8, 5;
+bombe = 3
+for b in range(bombe):
+    
+posizione_bombe = (2,3), (3,4), (3,5)
+
+numero_caselle=w*h
 campo = [["?" for x in range(w)] for y in range(h)]
 alfabeto = (" ", "A", "B", "C", "D", "E", "F", "G", "H", "I", "L")
 campo [0] =  alfabeto[:w]
@@ -42,7 +60,9 @@ print_griglia(campo)
 while True:
     scelta = input('Inserisci le coordinate della casella --> ')
     if (scelta[0] in alfabeto[:w]) and (int(scelta[1]) in range(h)):
-
         break
     else:
         print("Scegli dei valori corretti")
+    if numero_caselle <= bombe:
+        print ("Congratulazioni! Hai vinto!!!")
+        break
