@@ -2,23 +2,22 @@ import math
 import random
 
 class Casella:
-    def __init__(self, x, y):
+    posizione_bombe = []
+    caselle_uscite = []
+
+    def __init__(self, x=0, y=0, bombeVicine=0):
         self.x = x
         self.y = y
+        self.bombeVicine = bombeVicine
 
     def ditanza_dalla_casella(self, other):
-        return distanza_tra_punti(self.casella, other) <= math.sqrt(2)
+        return distanza_tra_punti(self, other) <= math.sqrt(2)
 
+    def check_bomba(self):
+        return (self.x,self.y) in Casella.posizione_bombe
 
-class Bomba(Casella):
-    def __init__(self, x, y, bomba=True):
-        super().__init__(x, y)
-        self.bomba = bomba
-
-class Vuota(Casella):
-    def __init__(self, x, y, bombeVicine=9):
-        super().__init__(x, y)
-        self.bombeVicine = bombeVicine
+    def check_casella_uscita(self):
+        return (self.x,self.y) in Casella.caselle_uscite
 
 def distanza_tra_punti(p1, p2):
     """Calcola la distanza tra due oggetti Caselle"""
@@ -37,16 +36,23 @@ def caselle_rimanenti(griglia):
                 numero_caselle += 1
     return(numero_caselle)
 
-def check_bomba(x,y):
-    global posizione_bombe
-    return (x,y) in posizione_bombe
-
+# def check_bomba(x,y):
+#     global posizione_bombe
+#     return (x,y) in posizione_bombe
+#
 w, h = 8, 5;
 bombe = 3
-for b in range(bombe):
-    
-posizione_bombe = (2,3), (3,4), (3,5)
+bombe_create = 0
 
+while bombe_create != bombe:
+    bomba = Casella()
+    bomba.x = random.randint(1,w-1)
+    bomba.y = random.randint(1,h-1)
+    if not bomba.check_bomba():
+        Casella.posizione_bombe.append((bomba.x,bomba.y))
+        bombe_create += 1
+
+print(Casella.posizione_bombe)
 numero_caselle=w*h
 campo = [["?" for x in range(w)] for y in range(h)]
 alfabeto = (" ", "A", "B", "C", "D", "E", "F", "G", "H", "I", "L")
@@ -57,10 +63,31 @@ for i in range(h-1):
 
 print_griglia(campo)
 
+
+
 while True:
     scelta = input('Inserisci le coordinate della casella --> ')
     if (scelta[0] in alfabeto[:w]) and (int(scelta[1]) in range(h)):
-        break
+        casella = Casella()
+        casella.x = alfabeto.index(scelta[0])
+        casella.y = int(scelta[1])
+        if casella.check_bomba():
+            print("Vabbe ma allora sei un COGLIONE! Hai perso!!!")
+            numero_caselle = 0
+            break
+        elif casella.check_casella_uscita():
+            print ("Hai già scelto questa casella, per favore prova di nuovo!")
+            break
+        else:
+            for bomba_prova in range(bombe):
+                bomba = Casella()
+                bomba.x = Casella.posizione_bombe[bomba_prova][0]
+                bomba.y = Casella.posizione_bombe[bomba_prova][1]
+                if casella.ditanza_dalla_casella(bomba):
+                    casella.bombeVicine += 1
+            print(casella.bombeVicine)
+            campo[int(casella.y)][casella.x] = casella.bombeVicine
+            print_griglia(campo)
     else:
         print("Scegli dei valori corretti")
     if numero_caselle <= bombe:
