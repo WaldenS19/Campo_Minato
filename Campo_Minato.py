@@ -23,7 +23,7 @@ class Casella:
 
     #La casella è limitrofa?
     def caselle_vicine(self,other):
-        return 0 < math.sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2) <= math.sqrt(2)
+        return (0 < math.sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2) <= math.sqrt(2))
 
     #Numero di bombe vicine
     def check_bombeVicine(self):
@@ -66,6 +66,7 @@ def numero_bombe():
         bombe = int(bombe)
     except ValueError:
         print('Hey amico! Solo 1 carattere numerico, grazie!')
+        bombe = 0
         numero_bombe()
     if bombe < (xmax - 1) * (ymax - 1):
         return(bombe)
@@ -122,6 +123,7 @@ def primogiro():
     global numero_caselle
     numero_caselle -= 1
     casella = crea_casella(alfabeto.index(scelta[0]), int(scelta[1]))
+    casella.casella_selezionata()
     creazione_bombe()
     casella.check_bombeVicine()
     if casella.bombeVicine == 0:
@@ -131,10 +133,11 @@ def primogiro():
 #Inizio gioco
 while numero_caselle > bombe and fineGioco == False:
     scelta = input('Inserisci le coordinate della casella --> ').split()
+    numero_caselle = caselle_rimanenti(campo)
     if (scelta[0] not in alfabeto[1:xmax]) or (int(scelta[1]) not in range(ymax)):
         print("Scegli dei valori corretti")
     elif numero_caselle == (xmax-1)*(ymax-1):
-        primogiro()
+            primogiro()
     else:
         casella = crea_casella(alfabeto.index(scelta[0]), int(scelta[1]))
         if casella.check_casella_uscita():
