@@ -23,7 +23,7 @@ class Casella:
 
     #La casella è limitrofa?
     def caselle_vicine(self,other):
-        return math.sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2) <= math.sqrt(2) and math.sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2) != 0
+        return 0 < math.sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2) <= math.sqrt(2)
 
     #Numero di bombe vicine
     def check_bombeVicine(self):
@@ -34,7 +34,17 @@ class Casella:
             if self.caselle_vicine(bomba):
                 self.bombeVicine += 1
         campo[int(self.y)][self.x] = self.bombeVicine
+        self.casella_selezionata()
 
+    #Ciclo su tutta la griglia per quanto riguarda gli zzei
+    def ciclo_zeri(self):
+        for m in range(1, ymax):
+            for n in range(1, xmax):
+                casella_vuota = crea_casella(n, m)
+                if casella_vuota.caselle_vicine(self) and not casella_vuota.check_casella_uscita():
+                    casella_vuota.check_bombeVicine()
+                    if casella_vuota.bombeVicine == 0:
+                        casella_vuota.ciclo_zeri()
 
 
 # Creazione griglia
@@ -53,8 +63,8 @@ printgriglia(campo)
 # Funzione creazione classe (per non ripeterla 10k volta
 def crea_casella(x, y):
     casella = Casella()
-    casella.x = alfabeto.index(scelta[0])
-    casella.y = int(scelta[1])
+    casella.x = x
+    casella.y = y
     return casella
 
 #Conta caselle ancora da apire: in input gli passo il campo da gioco
@@ -85,16 +95,16 @@ def primogiro():
     global numero_caselle
     numero_caselle -= 1
     casella = crea_casella(alfabeto.index(scelta[0]), int(scelta[1]))
-    casella.casella_selezionata()
     creazione_bombe()
     casella.check_bombeVicine()
+    if casella.bombeVicine == 0:
+        casella.ciclo_zeri()
     printgriglia(campo)
     print(Casella.posizione_bombe)
 
 #Inizio gioco
-while True:
+while numero_caselle > bombe:
     scelta = input('Inserisci le coordinate della casella --> ')
-    numero_caselle = caselle_rimanenti(campo)
     if (scelta[0] not in alfabeto[1:xmax]) or (int(scelta[1]) not in range(ymax)):
         print("Scegli dei valori corretti")
     elif numero_caselle == (xmax-1)*(ymax-1):
@@ -105,10 +115,14 @@ while True:
             print ("Hai già scelto questa casella, per favore prova di nuovo!")
         elif casella.check_bomba():
             print("Vabbe ma allora sei un COGLIONE! Hai perso!!!")
-        elif (scelta[0] in alfabeto[1:xmax-1]) and (int(scelta[1]) in range(ymax-1)):
-            casella.casella_selezionata()
+        elif (scelta[0] in alfabeto[1:xmax]) and (int(scelta[1]) in range(ymax)):
             casella.check_bombeVicine()
-
+            if casella.bombeVicine == 0:
+                casella.ciclo_zeri()
             printgriglia(campo)
         else:
             print("Scegli dei valori corretti")
+    numero_caselle = caselle_rimanenti(campo)
+    if numero_caselle <= bombe:
+        print ("Congratulazioni! Hai vinto")
+
