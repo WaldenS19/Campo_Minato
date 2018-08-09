@@ -48,11 +48,12 @@ class Casella:
 
 
 # Creazione griglia
-xmax, ymax = 8, 5;
+xmax, ymax= input ("Inserisci le dimensioni del campo con cui vuoi giocare (dimensioni massime 19*19) --> ").split()
+xmax, ymax = int(xmax), int(ymax);
 numero_caselle = (xmax-1)*(ymax-1)
 fineGioco = False
 campo = [["?" for x in range(xmax)] for y in range(ymax)]
-alfabeto = (" ", "A", "B", "C", "D", "E", "F", "G", "H", "I", "L")
+alfabeto = (" ", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S")
 campo [0] = alfabeto[:xmax]
 for i in range(ymax-1):
     campo[i+1][0]=i+1
@@ -79,7 +80,13 @@ def caselle_rimanenti(griglia):
     return(numero_caselle)
 
 # Crazione bombe
-bombe = 3
+dati_corretti = False
+while dati_corretti == False:
+    bombe = input('Inserisci il numero delle bombe con cui vuoi giocare --> ')
+    bombe = int(bombe)
+    if bombe < xmax*ymax:
+        dati_corretti = True
+
 bombe_create = 0
 def creazione_bombe():
     global bombe_create
