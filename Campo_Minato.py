@@ -50,7 +50,7 @@ class Casella:
 def creazione_griglia():
     try:
         xmax, ymax = input("Inserisci le dimensioni del campo con cui vuoi giocare (dimensioni massime 19*19) --> ").split()
-        xmax, ymax = int(xmax), int(ymax)
+        xmax, ymax = int(xmax)+1, int(ymax)+1
     except ValueError:
         print('Hey amico! Inserisci 2 caratteri numerici separati da uno spazio, grazie!')
         creazione_griglia()
