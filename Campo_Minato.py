@@ -50,6 +50,7 @@ class Casella:
 # Creazione griglia
 xmax, ymax = 8, 5;
 numero_caselle = (xmax-1)*(ymax-1)
+fineGioco = False
 campo = [["?" for x in range(xmax)] for y in range(ymax)]
 alfabeto = (" ", "A", "B", "C", "D", "E", "F", "G", "H", "I", "L")
 campo [0] = alfabeto[:xmax]
@@ -100,10 +101,9 @@ def primogiro():
     if casella.bombeVicine == 0:
         casella.ciclo_zeri()
     printgriglia(campo)
-    print(Casella.posizione_bombe)
 
 #Inizio gioco
-while numero_caselle > bombe:
+while numero_caselle > bombe and fineGioco == False:
     scelta = input('Inserisci le coordinate della casella --> ')
     if (scelta[0] not in alfabeto[1:xmax]) or (int(scelta[1]) not in range(ymax)):
         print("Scegli dei valori corretti")
@@ -115,6 +115,7 @@ while numero_caselle > bombe:
             print ("Hai già scelto questa casella, per favore prova di nuovo!")
         elif casella.check_bomba():
             print("Vabbe ma allora sei un COGLIONE! Hai perso!!!")
+            fineGioco = True
         elif (scelta[0] in alfabeto[1:xmax]) and (int(scelta[1]) in range(ymax)):
             casella.check_bombeVicine()
             if casella.bombeVicine == 0:
