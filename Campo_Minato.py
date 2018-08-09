@@ -47,9 +47,35 @@ class Casella:
                         casella_vuota.ciclo_zeri()
 
 
+def creazione_griglia():
+    try:
+        xmax, ymax = input("Inserisci le dimensioni del campo con cui vuoi giocare (dimensioni massime 19*19) --> ").split()
+        xmax, ymax = int(xmax), int(ymax)
+    except ValueError:
+        print('Hey amico! Inserisci 2 caratteri numerici separati da uno spazio, grazie!')
+        creazione_griglia()
+    if 0 < xmax <19 and 0 < ymax < 19:
+        return (xmax,ymax)
+    else:
+        print('Hey amico! Rispetta le indicazioni sulle dimensioni consentite')
+        creazione_griglia()
+
+def numero_bombe():
+    try:
+        bombe = input('Inserisci il numero delle bombe con cui vuoi giocare --> ')
+        bombe = int(bombe)
+    except ValueError:
+        print('Hey amico! Solo 1 carattere numerico, grazie!')
+        numero_bombe()
+    if bombe < (xmax - 1) * (ymax - 1):
+        return(bombe)
+    else:
+        print('Hey amico! Il numero di bombe non possono essere superiori al numero di caselle disponibili')
+        numero_bombe()
+
 # Creazione griglia
-xmax, ymax= input ("Inserisci le dimensioni del campo con cui vuoi giocare (dimensioni massime 19*19) --> ").split()
-xmax, ymax = int(xmax), int(ymax);
+(xmax,ymax) = creazione_griglia()
+bombe = numero_bombe()
 numero_caselle = (xmax-1)*(ymax-1)
 fineGioco = False
 campo = [["?" for x in range(xmax)] for y in range(ymax)]
@@ -80,13 +106,6 @@ def caselle_rimanenti(griglia):
     return(numero_caselle)
 
 # Crazione bombe
-dati_corretti = False
-while dati_corretti == False:
-    bombe = input('Inserisci il numero delle bombe con cui vuoi giocare --> ')
-    bombe = int(bombe)
-    if bombe < xmax*ymax:
-        dati_corretti = True
-
 bombe_create = 0
 def creazione_bombe():
     global bombe_create
