@@ -130,7 +130,7 @@ def primogiro():
 
 #Inizio gioco
 while numero_caselle > bombe and fineGioco == False:
-    scelta = input('Inserisci le coordinate della casella --> ')
+    scelta = input('Inserisci le coordinate della casella --> ').split()
     if (scelta[0] not in alfabeto[1:xmax]) or (int(scelta[1]) not in range(ymax)):
         print("Scegli dei valori corretti")
     elif numero_caselle == (xmax-1)*(ymax-1):
